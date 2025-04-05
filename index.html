@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Calendar with Countdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #weeksCountdown, #countdown {
+            font-size: 2em;
+            color: #333;
+            margin: 20px 0;
+        }
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .month {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+        }
+        .month h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .day {
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+        .day.past {
+            background-color: #ccc;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendar for 2025 and January 2026</h1>
+    <div id="weeksCountdown">Loading weeks...</div>
+    <div id="countdown">Loading countdown...</div>
+    <div class="calendar" id="calendar"></div>
+
+    <script>
+        // Countdown clock and weeks countdown logic
+        const targetDate = new Date("January 14, 2026 00:00:00").getTime();
+        const weeksCountdownElement = document.getElementById("weeksCountdown");
+        const countdownElement = document.getElementById("countdown");
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            const weeks = Math.floor(timeLeft / (1000 * 60 * 60 * 24 * 7));
+            const days = Math.floor((timeLeft % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            weeksCountdownElement.innerHTML = `${weeks} weeks`;
+            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (timeLeft < 0) {
+                clearInterval(countdownInterval);
+                weeksCountdownElement.innerHTML = "";
+                countdownElement.innerHTML = "The countdown is over!";
+            }
+        }, 1000);
+
+        // Calendar generation logic
+        const calendarContainer = document.getElementById("calendar");
+        const today = new Date();
+
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        function generateCalendar() {
+            for (let year = 2025; year <= 2026; year++) {
+                const startMonth = year === 2025 ? 0 : 0;
+                const endMonth = year === 2025 ? 11 : 0;
+
+                for (let month = startMonth; month <= endMonth; month++) {
+                    const monthDiv = document.createElement("div");
+                    monthDiv.className = "month";
+                    monthDiv.innerHTML = `<h3>${months[month]} ${year}</h3>`;
+
+                    const daysDiv = document.createElement("div");
+                    daysDiv.className = "days";
+
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const dayDiv = document.createElement("div");
+                        dayDiv.className = "day";
+                        dayDiv.textContent = day;
+
+                        const currentDate = new Date(year, month, day);
+                        if (currentDate < today) {
+                            dayDiv.classList.add("past");
+                        }
+
+                        daysDiv.appendChild(dayDiv);
+                    }
+
+                    monthDiv.appendChild(daysDiv);
+                    calendarContainer.appendChild(monthDiv);
+                }
+            }
+        }
+
+        generateCalendar();
+    </script>
+</body>
+</html>
