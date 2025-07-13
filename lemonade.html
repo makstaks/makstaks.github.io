@@ -10,41 +10,122 @@
             text-align: center;
             background: #eef;
         }
-        #game {
-            perspective: 800px;
-            margin: 40px auto;
-            width: 200px;
-            height: 200px;
-        }
-        .cube {
+        #stand {
             position: relative;
-            width: 100px;
-            transform-style: preserve-3d;
-            transform: rotateX(45deg) rotateZ(45deg);
-            animation: bounce 2s infinite alternate;
-            margin: auto;
+            width: 320px;
+            height: 220px;
+            margin: 40px auto;
         }
-        .face {
+        .stand-base {
             position: absolute;
-            width: 100px;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            background: #d5a253;
+            border: 3px solid #b58325;
+            border-radius: 8px;
+        }
+        .stand-sign {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 40px;
+            background: #f8c23d;
+            border: 3px solid #b58325;
+            border-radius: 5px;
+            line-height: 40px;
+            font-weight: bold;
+        }
+        .counter {
+            position: absolute;
+            bottom: 120px;
+            width: 100%;
+            height: 10px;
+            background: #b58325;
+        }
+        .employee {
+            position: absolute;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
             height: 100px;
-            opacity: 0.9;
         }
-        .top {
-            background: #ffe066;
-            transform: rotateX(90deg) translateZ(50px);
+        .head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #ffe0bd;
+            border-radius: 50%;
+            border: 2px solid #d8b48a;
         }
-        .left {
-            background: #ffc107;
-            transform: rotateY(-90deg) translateZ(50px);
+        .body {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: #6495ed;
+            border-radius: 5px;
         }
-        .right {
-            background: #ffb300;
-            transform: translateZ(50px);
+        .arm {
+            position: absolute;
+            top: 50px;
+            width: 10px;
+            height: 40px;
+            background: #ffe0bd;
+            transform-origin: top center;
         }
-        @keyframes bounce {
-            from { transform: rotateX(45deg) rotateZ(45deg) translateY(0); }
-            to   { transform: rotateX(45deg) rotateZ(45deg) translateY(-20px); }
+        .arm.left {
+            left: 8px;
+            transform: rotate(20deg);
+        }
+        .arm.right {
+            right: 8px;
+            animation: pour 2s infinite;
+        }
+        .arm.right::after {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 30px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 5px 5px 0 0;
+        }
+        @keyframes pour {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(-70deg); }
+            100% { transform: rotate(-10deg); }
+        }
+        .cup {
+            position: absolute;
+            bottom: 130px;
+            left: 40px;
+            width: 20px;
+            height: 30px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 0 0 5px 5px;
+        }
+        .pitcher {
+            position: absolute;
+            bottom: 130px;
+            right: 40px;
+            width: 30px;
+            height: 40px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
         #revenueForm {
             margin-top: 30px;
@@ -61,12 +142,18 @@
 </head>
 <body>
     <h1>Lemonade Tycoon Progress Tracker</h1>
-    <div id="game">
-        <div class="cube">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
+    <div id="stand">
+        <div class="stand-sign">LEMONADE</div>
+        <div class="counter"></div>
+        <div class="stand-base"></div>
+        <div class="employee">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
         </div>
+        <div class="cup"></div>
+        <div class="pitcher"></div>
     </div>
 
     <form id="revenueForm">
