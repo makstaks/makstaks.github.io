@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemonade Tycoon Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #eef;
+        }
+        #game {
+            perspective: 800px;
+            margin: 40px auto;
+            width: 200px;
+            height: 200px;
+        }
+        .cube {
+            position: relative;
+            width: 100px;
+            transform-style: preserve-3d;
+            transform: rotateX(45deg) rotateZ(45deg);
+            animation: bounce 2s infinite alternate;
+            margin: auto;
+        }
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.9;
+        }
+        .top {
+            background: #ffe066;
+            transform: rotateX(90deg) translateZ(50px);
+        }
+        .left {
+            background: #ffc107;
+            transform: rotateY(-90deg) translateZ(50px);
+        }
+        .right {
+            background: #ffb300;
+            transform: translateZ(50px);
+        }
+        @keyframes bounce {
+            from { transform: rotateX(45deg) rotateZ(45deg) translateY(0); }
+            to   { transform: rotateX(45deg) rotateZ(45deg) translateY(-20px); }
+        }
+        #revenueForm {
+            margin-top: 30px;
+        }
+        #revenueTable {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        #revenueTable th, #revenueTable td {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lemonade Tycoon Progress Tracker</h1>
+    <div id="game">
+        <div class="cube">
+            <div class="face top"></div>
+            <div class="face left"></div>
+            <div class="face right"></div>
+        </div>
+    </div>
+
+    <form id="revenueForm">
+        <label>
+            Date:
+            <input type="date" id="revDate" required>
+        </label>
+        <label>
+            Revenue:
+            <input type="number" id="revAmount" step="0.01" required>
+        </label>
+        <button type="submit">Save</button>
+    </form>
+
+    <table id="revenueTable">
+        <thead>
+            <tr><th>Date</th><th>Revenue</th></tr>
+        </thead>
+        <tbody id="revenueBody"></tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('revenueForm');
+        const revDate = document.getElementById('revDate');
+        const revAmount = document.getElementById('revAmount');
+        const revBody = document.getElementById('revenueBody');
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('revenueData') || '{}');
+            revBody.innerHTML = '';
+            Object.keys(data).sort().forEach(date => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${date}</td><td>$${parseFloat(data[date]).toFixed(2)}</td>`;
+                revBody.appendChild(row);
+            });
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const date = revDate.value;
+            const amount = revAmount.value;
+            if (!date || !amount) return;
+            const data = JSON.parse(localStorage.getItem('revenueData') || '{}');
+            data[date] = parseFloat(amount);
+            localStorage.setItem('revenueData', JSON.stringify(data));
+            revDate.value = '';
+            revAmount.value = '';
+            loadData();
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
